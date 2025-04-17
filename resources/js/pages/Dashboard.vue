@@ -178,7 +178,7 @@ const expenses = [
                 <Table class="caption-top">
                     <TableCaption
                         >A list of your recent expenses.
-                        <TextLink class="inline-flex" href="/expenses">View more <MoveRightIcon class="ml-1 w-4" /></TextLink
+                        <TextLink class="inline-flex" href="/expenses">View more</TextLink
                     ></TableCaption>
                     <TableHeader>
                         <TableRow>
