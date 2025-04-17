@@ -26,6 +26,9 @@
     "dependencies": {
         "@inertiajs/vue3": "^2.0.0-beta.3",
         "@tailwindcss/vite": "^4.1.1",
+        "@tanstack/vue-table": "^8.21.3",
+        "@unovis/ts": "^1.5.1",
+        "@unovis/vue": "^1.5.1",
         "@vitejs/plugin-vue": "^5.2.1",
         "@vueuse/core": "^12.8.2",
         "class-variance-authority": "^0.7.1",
@@ -47,5 +50,6 @@
         "@rollup/rollup-linux-x64-gnu": "4.9.5",
         "@tailwindcss/oxide-linux-x64-gnu": "^4.0.1",
         "lightningcss-linux-x64-gnu": "^1.29.1"
-    }
+    },
+    "packageManager": "pnpm@10.6.2+sha512.47870716bea1572b53df34ad8647b42962bc790ce2bf4562ba0f643237d7302a3d6a8ecef9e4bdfc01d23af1969aa90485d4cebb0b9638fa5ef1daef656f6c1b"
 }
