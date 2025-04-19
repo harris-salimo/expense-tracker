@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import AppPasswordInput from '@/components/AppPasswordInput.vue';
 import InputError from '@/components/InputError.vue';
 import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
@@ -59,9 +60,8 @@ const submit = () => {
                             Forgot password?
                         </TextLink>
                     </div>
-                    <Input
+                    <AppPasswordInput
                         id="password"
-                        type="password"
                         required
                         :tabindex="2"
                         autocomplete="current-password"
