@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { cn } from '@/lib/utils';
 import { useVModel } from '@vueuse/core';
-import { EyeClosedIcon, EyeIcon } from 'lucide-vue-next';
+import { Eye, EyeClosed } from 'lucide-vue-next';
 import { ref, type HTMLAttributes } from 'vue';
 import { Button } from './ui/button';
 
@@ -42,7 +42,7 @@ const modelValue = useVModel(props, 'modelValue', emits, {
             "
         />
         <Button class="absolute top-0.5 right-0.5 rounded-full" type="button" variant="ghost" size="sm" @click="toggleVisibility"
-            ><EyeIcon v-show="currentType === 'password'" /><EyeClosedIcon v-show="currentType === 'text'"
+            ><Eye v-show="currentType === 'password'" /><EyeClosed v-show="currentType === 'text'"
         /></Button>
     </div>
 </template>

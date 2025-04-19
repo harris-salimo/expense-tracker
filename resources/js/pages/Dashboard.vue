@@ -2,12 +2,10 @@
 import TextLink from '@/components/TextLink.vue';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/AppLayout.vue';
+import { dayjs } from '@/lib/dayjs';
+import { currencyFormat } from '@/lib/utils';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/vue3';
-import dayjs from 'dayjs';
-import localizedFormat from 'dayjs/plugin/localizedFormat';
-
-dayjs.extend(localizedFormat);
 
 interface Props {
     latestExpenses: Record<string, any>[];
@@ -33,17 +31,17 @@ const breadcrumbs: BreadcrumbItem[] = [
         <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
             <div class="grid auto-rows-min gap-4 md:grid-cols-3">
                 <div class="border-sidebar-border/70 dark:border-sidebar-border relative overflow-hidden rounded-xl border p-5">
-                    <p class="text-2xl font-medium text-gray-900">{{pastWeekTotalExpenses}} Ar</p>
+                    <p class="text-2xl font-medium text-gray-900">{{ currencyFormat(pastWeekTotalExpenses) }}</p>
 
                     <p class="text-sm text-gray-500">Total Past Week Expenses</p>
                 </div>
                 <div class="border-sidebar-border/70 dark:border-sidebar-border relative overflow-hidden rounded-xl border p-5">
-                    <p class="text-2xl font-medium text-gray-900">{{pastMonthTotalExpenses}} Ar</p>
+                    <p class="text-2xl font-medium text-gray-900">{{ currencyFormat(pastMonthTotalExpenses) }}</p>
 
                     <p class="text-sm text-gray-500">Total Past Month Expenses</p>
                 </div>
                 <div class="border-sidebar-border/70 dark:border-sidebar-border relative overflow-hidden rounded-xl border p-5">
-                    <p class="text-2xl font-medium text-gray-900">{{pastYearTotalExpenses}} Ar</p>
+                    <p class="text-2xl font-medium text-gray-900">{{ currencyFormat(pastYearTotalExpenses) }}</p>
 
                     <p class="text-sm text-gray-500">Total Past Year Expenses</p>
                 </div>
@@ -67,9 +65,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                                 {{ dayjs(expense.createdAt).format('l') }}
                             </TableCell>
                             <TableCell>{{ expense.category }}</TableCell>
-                            <TableCell class="text-right">
-                                {{ expense.amount }} Ar
-                            </TableCell>
+                            <TableCell class="text-right"> {{ currencyFormat(expense.amount) }} </TableCell>
                         </TableRow>
                     </TableBody>
                 </Table>

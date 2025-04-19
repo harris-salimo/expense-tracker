@@ -2,7 +2,8 @@
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, valueUpdater } from '@/components/ui/table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { valueUpdater } from '@/components/ui/table/utils';
 import type { ColumnDef, ColumnFiltersState, ExpandedState, SortingState, VisibilityState } from '@tanstack/vue-table';
 import {
     FlexRender,
@@ -13,8 +14,16 @@ import {
     getSortedRowModel,
     useVueTable,
 } from '@tanstack/vue-table';
+import { ChevronDown, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-vue-next';
+import { ref } from 'vue';
+import Select from './ui/select/Select.vue';
+import SelectContent from './ui/select/SelectContent.vue';
+import SelectItem from './ui/select/SelectItem.vue';
+import SelectTrigger from './ui/select/SelectTrigger.vue';
+import SelectValue from './ui/select/SelectValue.vue';
 
 const props = defineProps<{
+    filteredBy?: string;
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
 }>();
@@ -64,12 +73,13 @@ const table = useVueTable({
 
 <template>
     <div>
-        <div class="flex items-center py-4">
+        <div class="flex flex-col items-center gap-2 py-2">
             <Input
+                v-show="!!filteredBy"
                 class="max-w-sm"
                 placeholder="Filter..."
-                :model-value="table.getColumn('email')?.getFilterValue() as string"
-                @update:model-value="table.getColumn('email')?.setFilterValue($event)"
+                :model-value="table.getColumn(filteredBy!)?.getFilterValue() as string"
+                @update:model-value="table.getColumn(filteredBy!)?.setFilterValue($event)"
             />
             <DropdownMenu>
                 <DropdownMenuTrigger as-child>
@@ -95,7 +105,7 @@ const table = useVueTable({
                 </DropdownMenuContent>
             </DropdownMenu>
         </div>
-        <div>
+        <div class="py-2">
             <Table>
                 <TableHeader>
                     <TableRow v-for="headerGroup in table.getHeaderGroups()" :key="headerGroup.id">
@@ -127,13 +137,13 @@ const table = useVueTable({
                 </TableBody>
             </Table>
         </div>
-        <div class="flex items-center justify-between px-2">
-            <div class="text-muted-foreground flex-1 text-sm">
+        <div class="flex items-center justify-between p-2">
+            <div class="text-muted-foreground hidden flex-1 text-sm md:flex">
                 {{ table.getFilteredSelectedRowModel().rows.length }} of {{ table.getFilteredRowModel().rows.length }} row(s) selected.
             </div>
-            <div class="flex items-center space-x-6 lg:space-x-8">
+            <div class="flex items-center space-x-2 md:space-x-6 lg:space-x-8">
                 <div class="flex items-center space-x-2">
-                    <p class="text-sm font-medium">Rows per page</p>
+                    <p class="hidden text-sm font-medium md:flex">Rows per page</p>
                     <Select :model-value="`${table.getState().pagination.pageSize}`" @update:model-value="table.setPageSize">
                         <SelectTrigger class="h-8 w-[70px]">
                             <SelectValue :placeholder="`${table.getState().pagination.pageSize}`" />
@@ -157,15 +167,15 @@ const table = useVueTable({
                         @click="table.setPageIndex(0)"
                     >
                         <span class="sr-only">Go to first page</span>
-                        <DoubleArrowLeftIcon class="h-4 w-4" />
+                        <ChevronsLeft class="h-4 w-4" />
                     </Button>
                     <Button variant="outline" class="h-8 w-8 p-0" :disabled="!table.getCanPreviousPage()" @click="table.previousPage()">
                         <span class="sr-only">Go to previous page</span>
-                        <ChevronLeftIcon class="h-4 w-4" />
+                        <ChevronLeft class="h-4 w-4" />
                     </Button>
                     <Button variant="outline" class="h-8 w-8 p-0" :disabled="!table.getCanNextPage()" @click="table.nextPage()">
                         <span class="sr-only">Go to next page</span>
-                        <ChevronRightIcon class="h-4 w-4" />
+                        <ChevronRight class="h-4 w-4" />
                     </Button>
                     <Button
                         variant="outline"
@@ -174,7 +184,7 @@ const table = useVueTable({
                         @click="table.setPageIndex(table.getPageCount() - 1)"
                     >
                         <span class="sr-only">Go to last page</span>
-                        <DoubleArrowRightIcon class="h-4 w-4" />
+                        <ChevronsRight class="h-4 w-4" />
                     </Button>
                 </div>
             </div>
