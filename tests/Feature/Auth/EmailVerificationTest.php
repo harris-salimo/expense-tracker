@@ -1,12 +1,14 @@
 <?php
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\URL;
 
 test('email verification screen can be rendered', function () {
-    $user = User::factory()->unverified()->create();
+    $role = Role::factory()->create(['name' => 'User']);
+    $user = User::factory()->for($role)->unverified()->create();
 
     $response = $this->actingAs($user)->get('/verify-email');
 
@@ -14,7 +16,8 @@ test('email verification screen can be rendered', function () {
 });
 
 test('email can be verified', function () {
-    $user = User::factory()->unverified()->create();
+    $role = Role::factory()->create(['name' => 'User']);
+    $user = User::factory()->for($role)->unverified()->create();
 
     Event::fake();
 
@@ -32,7 +35,8 @@ test('email can be verified', function () {
 });
 
 test('email is not verified with invalid hash', function () {
-    $user = User::factory()->unverified()->create();
+    $role = Role::factory()->create(['name' => 'User']);
+    $user = User::factory()->for($role)->unverified()->create();
 
     $verificationUrl = URL::temporarySignedRoute(
         'verification.verify',

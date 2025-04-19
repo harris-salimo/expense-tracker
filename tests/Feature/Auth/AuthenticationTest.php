@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Role;
 use App\Models\User;
 
 test('login screen can be rendered', function () {
@@ -9,7 +10,8 @@ test('login screen can be rendered', function () {
 });
 
 test('users can authenticate using the login screen', function () {
-    $user = User::factory()->create();
+    $role = Role::factory()->create(['name' => 'User']);
+    $user = User::factory()->for($role)->create();
 
     $response = $this->post('/login', [
         'email' => $user->email,
@@ -21,7 +23,8 @@ test('users can authenticate using the login screen', function () {
 });
 
 test('users can not authenticate with invalid password', function () {
-    $user = User::factory()->create();
+    $role = Role::factory()->create(['name' => 'User']);
+    $user = User::factory()->for($role)->create();
 
     $this->post('/login', [
         'email' => $user->email,
@@ -32,7 +35,8 @@ test('users can not authenticate with invalid password', function () {
 });
 
 test('users can logout', function () {
-    $user = User::factory()->create();
+    $role = Role::factory()->create(['name' => 'User']);
+    $user = User::factory()->for($role)->create();
 
     $response = $this->actingAs($user)->post('/logout');
 

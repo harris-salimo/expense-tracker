@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Role;
 use App\Models\User;
 
 test('guests are redirected to the login page', function () {
@@ -8,7 +9,8 @@ test('guests are redirected to the login page', function () {
 });
 
 test('authenticated users can visit the dashboard', function () {
-    $user = User::factory()->create();
+    $role = Role::factory()->create(['name' => 'User']);
+    $user = User::factory()->for($role)->create();
     $this->actingAs($user);
 
     $response = $this->get('/dashboard');
