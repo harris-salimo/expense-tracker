@@ -41,7 +41,7 @@ const modelValue = useVModel(props, 'modelValue', emits, {
                 )
             "
         />
-        <Button class="absolute top-0.5 right-0.5 rounded-full" type="button" variant="ghost" size="sm" @click="toggleVisibility"
+        <Button class="absolute top-0.5 right-1 rounded-full" type="button" variant="ghost" size="sm" @click="toggleVisibility"
             ><Eye v-show="currentType === 'password'" /><EyeClosed v-show="currentType === 'text'"
         /></Button>
     </div>
