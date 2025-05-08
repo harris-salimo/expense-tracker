@@ -17,7 +17,6 @@ FROM richarvey/nginx-php-fpm:3.1.6
 
 RUN apk update && \
     apk add --no-cache postgresql-dev && \
-    docker-php-ext-configure pgsql pdo_pgsql && \
     docker-php-ext-install pgsql pdo_pgsql
 
 COPY . .
