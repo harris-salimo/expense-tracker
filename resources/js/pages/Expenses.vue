@@ -32,8 +32,8 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const toUpdatedExpense = ref<Record<string, any> | null>(null);
-const updated = ref(false);
-const deleted = ref(false);
+const updating = ref(false);
+const deleting = ref(false);
 
 export interface Expense {
     id: string;
@@ -108,11 +108,11 @@ const columns: ColumnDef<Expense>[] = [
                 onExpand: row.toggleExpanded,
                 onUpdate: (id: number) => {
                     toUpdatedExpense.value = props.expenses.find((expense) => expense.id === id) ?? null;
-                    updated.value = true;
+                    updating.value = true;
                 },
                 onDelete: (id: number) => {
                     toUpdatedExpense.value = props.expenses.find((expense) => expense.id === id) ?? null;
-                    deleted.value = true;
+                    deleting.value = true;
                 },
             });
         },
@@ -125,12 +125,13 @@ const form = useForm({
     password: '',
 });
 
+
 const updateExpense = (e: Event) => {
     e.preventDefault();
 
-    form.delete(route('profile.destroy'), {
+    form.put(route('profile.update'), {
         preserveScroll: true,
-        onSuccess: () => closeModal(),
+        onSuccess: () => updating.value = false,
         onError: () => passwordInput.value?.focus(),
         onFinish: () => form.reset(),
     });
@@ -141,7 +142,7 @@ const deleteExpense = (e: Event) => {
 
     form.delete(route('profile.destroy'), {
         preserveScroll: true,
-        onSuccess: () => closeModal(),
+        onSuccess: () => deleting.value = false,
         onError: () => passwordInput.value?.focus(),
         onFinish: () => form.reset(),
     });
@@ -156,7 +157,7 @@ const deleteExpense = (e: Event) => {
             <AppDataTable :columns="columns" :data="expenses" /></div
     ></AppLayout>
 
-    <Dialog :open="updated"
+    <Dialog :open="updating"
         ><DialogContent>
             <form class="space-y-6" @submit="updateExpense">
                 <DialogHeader class="space-y-3">
@@ -175,7 +176,7 @@ const deleteExpense = (e: Event) => {
 
                 <DialogFooter class="gap-2">
                     <DialogClose as-child>
-                        <Button variant="secondary" @click="closeModal"> Cancel </Button>
+                        <Button variant="secondary" @click="updating = false"> Cancel </Button>
                     </DialogClose>
 
                     <Button variant="destructive" :disabled="form.processing">
@@ -186,7 +187,7 @@ const deleteExpense = (e: Event) => {
         </DialogContent></Dialog
     >
 
-    <Dialog :open="deleted"
+    <Dialog :open="deleting"
         ><DialogContent>
             <form class="space-y-6" @submit="deleteExpense">
                 <DialogHeader class="space-y-3">
@@ -205,7 +206,7 @@ const deleteExpense = (e: Event) => {
 
                 <DialogFooter class="gap-2">
                     <DialogClose as-child>
-                        <Button variant="secondary" @click="closeModal"> Cancel </Button>
+                        <Button variant="secondary" @click="deleting = false"> Cancel </Button>
                     </DialogClose>
 
                     <Button variant="destructive" :disabled="form.processing">
