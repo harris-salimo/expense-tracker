@@ -42,8 +42,8 @@ class DashboardController extends Controller
     private function getPastWeekTotalExpenses(mixed $expenses)
     {
         return number_format($expenses->whereBetween('created_at', [
-            now()->subWeek(),
-            now()
+            now()->subDays(7)->startOfDay(),
+            now()->endOfDay()
         ])
             ->sum('amount'), 2);
     }
@@ -51,8 +51,8 @@ class DashboardController extends Controller
     private function getPastMonthTotalExpenses(mixed $expenses)
     {
         return number_format($expenses->whereBetween('created_at', [
-            now()->subMonth(),
-            now()
+            now()->subDays(30)->startOfDay(),
+            now()->endOfDay()
         ])
             ->sum('amount'), 2);
     }
@@ -60,8 +60,8 @@ class DashboardController extends Controller
     private function getPastYearTotalExpenses(mixed $expenses)
     {
         return number_format($expenses->whereBetween('created_at', [
-            now()->subYear(),
-            now()
+            now()->subDays(365)->startOfDay(),
+            now()->endOfDay()
         ])
             ->sum('amount'), 2);
     }

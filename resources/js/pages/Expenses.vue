@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import AppDataTable from '@/components/AppDataTable.vue';
 import AppDataTableDropdownAction from '@/components/AppDataTableDropdownAction.vue';
+import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { dayjs } from '@/lib/dayjs';
 import { currencyFormat } from '@/lib/utils';
@@ -11,7 +14,7 @@ import { type BreadcrumbItem } from '@/types';
 import { Head, useForm } from '@inertiajs/vue3';
 import { ColumnDef } from '@tanstack/vue-table';
 import { ArrowUpDown } from 'lucide-vue-next';
-import { h, ref } from 'vue';
+import { h, ref, watch } from 'vue';
 
 interface Props {
     categories: Record<string, any>[];
@@ -31,7 +34,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const toUpdatedExpense = ref<Record<string, any> | null>(null);
+const adding = ref(false);
 const updating = ref(false);
 const deleting = ref(false);
 
@@ -42,24 +45,30 @@ export interface Expense {
     createdAt: string;
 }
 
+const form = useForm<{ id: string; category_id: string; amount: string }>({
+    id: '',
+    category_id: '',
+    amount: '',
+});
+
 const columns: ColumnDef<Expense>[] = [
-    {
-        id: 'select',
-        header: ({ table }) =>
-            h(Checkbox, {
-                modelValue: table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate'),
-                'onUpdate:modelValue': (value) => table.toggleAllPageRowsSelected(!!value),
-                ariaLabel: 'Select all',
-            }),
-        cell: ({ row }) =>
-            h(Checkbox, {
-                modelValue: row.getIsSelected(),
-                'onUpdate:modelValue': (value) => row.toggleSelected(!!value),
-                ariaLabel: 'Select row',
-            }),
-        enableSorting: false,
-        enableHiding: false,
-    },
+    // {
+    //     id: 'select',
+    //     header: ({ table }) =>
+    //         h(Checkbox, {
+    //             modelValue: table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate'),
+    //             'onUpdate:modelValue': (value) => table.toggleAllPageRowsSelected(!!value),
+    //             ariaLabel: 'Select all',
+    //         }),
+    //     cell: ({ row }) =>
+    //         h(Checkbox, {
+    //             modelValue: row.getIsSelected(),
+    //             'onUpdate:modelValue': (value) => row.toggleSelected(!!value),
+    //             ariaLabel: 'Select row',
+    //         }),
+    //     enableSorting: false,
+    //     enableHiding: false,
+    // },
     {
         accessorKey: 'createdAt',
         header: ({ column }) => {
@@ -72,7 +81,7 @@ const columns: ColumnDef<Expense>[] = [
                 () => ['Creation Date', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })],
             );
         },
-        cell: ({ row }) => h('div', { class: 'lowercase' }, dayjs(row.getValue('createdAt')).format('l')),
+        cell: ({ row }) => h('div', { class: '' }, dayjs(row.getValue('createdAt')).format('l')),
     },
     {
         accessorKey: 'category',
@@ -106,12 +115,18 @@ const columns: ColumnDef<Expense>[] = [
             return h(AppDataTableDropdownAction, {
                 data,
                 onExpand: row.toggleExpanded,
-                onUpdate: (id: number) => {
-                    toUpdatedExpense.value = props.expenses.find((expense) => expense.id === id) ?? null;
+                onUpdate: (id: string) => {
+                    const defaults = props.expenses.find((expense) => expense.id === id) ?? {};
+                    form.id = defaults.id;
+                    form.category_id = defaults.category_id;
+                    form.amount = defaults.amount;
                     updating.value = true;
                 },
-                onDelete: (id: number) => {
-                    toUpdatedExpense.value = props.expenses.find((expense) => expense.id === id) ?? null;
+                onDelete: (id: string) => {
+                    const defaults = props.expenses.find((expense) => expense.id === id) ?? {};
+                    form.id = defaults.id;
+                    form.category_id = defaults.category_id;
+                    form.amount = defaults.amount;
                     deleting.value = true;
                 },
             });
@@ -119,31 +134,45 @@ const columns: ColumnDef<Expense>[] = [
     },
 ];
 
-const passwordInput = ref<HTMLInputElement | null>(null);
-
-const form = useForm({
-    password: '',
+watch(form.data(), () => {
+    console.log(form.data());
 });
 
+const onClose = (cb: () => void) => {
+    form.cancel();
+    cb();
+};
+
+const addExpense = (e: Event) => {
+    e.preventDefault();
+
+    form.post(route('expense.store'), {
+        preserveScroll: true,
+        onSuccess: () => (adding.value = false),
+        onError: () => {},
+        onFinish: () => form.reset(),
+    });
+};
 
 const updateExpense = (e: Event) => {
     e.preventDefault();
 
-    form.put(route('profile.update'), {
+    form.put(route('expense.update', form.data()), {
         preserveScroll: true,
-        onSuccess: () => updating.value = false,
-        onError: () => passwordInput.value?.focus(),
+        onSuccess: () => (updating.value = false),
+        onError: () => {},
         onFinish: () => form.reset(),
     });
 };
 
 const deleteExpense = (e: Event) => {
     e.preventDefault();
+    console.log(form.data())
 
-    form.delete(route('profile.destroy'), {
+    form.delete(route('expense.destroy', { expense: form.data() }), {
         preserveScroll: true,
-        onSuccess: () => deleting.value = false,
-        onError: () => passwordInput.value?.focus(),
+        onSuccess: () => (deleting.value = false),
+        onError: () => {},
         onFinish: () => form.reset(),
     });
 };
@@ -153,35 +182,82 @@ const deleteExpense = (e: Event) => {
     <Head title="Expenses" />
 
     <AppLayout :breadcrumbs="breadcrumbs"
-        ><div class="border-sidebar-border/70 dark:border-sidebar-border relative m-5 min-h-[100vh] flex-1 rounded-xl border p-5 md:min-h-min">
+        ><div class="border-sidebar-border/70 dark:border-sidebar-border relative m-5 rounded-xl border p-5">
+            <div class="flex">
+                <Button type="button" class="ml-auto" @click="adding = true">Ajouter</Button>
+            </div>
             <AppDataTable :columns="columns" :data="expenses" /></div
     ></AppLayout>
+
+    <Dialog :open="adding"
+        ><DialogContent>
+            <form class="space-y-6" @submit="addExpense">
+                <DialogHeader class="space-y-3">
+                    <DialogTitle>New expense</DialogTitle>
+                </DialogHeader>
+
+                <div class="grid gap-2">
+                    <Label for="category" class="sr-only">Category</Label>
+                    <Select id="category" name="category_id" v-model="form.category_id">
+                        <SelectTrigger class="w-full">
+                            <SelectValue placeholder="Category" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem v-for="category in categories" :value="category.id" :key="category.id"> {{ category.name }} </SelectItem>
+                        </SelectContent>
+                    </Select>
+                    <InputError :message="form.errors.category_id" />
+                </div>
+
+                <div class="grid gap-2">
+                    <Label for="amount" class="sr-only">Amount</Label>
+                    <Input id="amount" type="number" name="amount" v-model="form.amount" min="0" step="0.01" placeholder="Amount" />
+                    <InputError :message="form.errors.amount" />
+                </div>
+
+                <DialogFooter class="gap-2">
+                    <DialogClose as-child>
+                        <Button variant="secondary" type="button" @click="onClose(() => (adding = false))"> Cancel </Button>
+                    </DialogClose>
+
+                    <Button type="submit" :disabled="form.processing"> Add </Button>
+                </DialogFooter>
+            </form>
+        </DialogContent></Dialog
+    >
 
     <Dialog :open="updating"
         ><DialogContent>
             <form class="space-y-6" @submit="updateExpense">
                 <DialogHeader class="space-y-3">
-                    <DialogTitle>Are you sure you want to delete your account?</DialogTitle>
-                    <DialogDescription>
-                        Once your account is deleted, all of its resources and data will also be permanently deleted. Please enter your password to
-                        confirm you would like to permanently delete your account.
-                    </DialogDescription>
+                    <DialogTitle>Edit expense</DialogTitle>
                 </DialogHeader>
 
                 <div class="grid gap-2">
-                    <Label for="password" class="sr-only">Password</Label>
-                    <Input id="password" type="password" name="password" ref="passwordInput" v-model="form.password" placeholder="Password" />
-                    <InputError :message="form.errors.password" />
+                    <Label for="category" class="sr-only">Category</Label>
+                    <Select id="category" name="category_id" v-model="form.category_id">
+                        <SelectTrigger class="w-full">
+                            <SelectValue placeholder="Category" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem v-for="category in categories" :value="category.id" :key="category.id"> {{ category.name }} </SelectItem>
+                        </SelectContent>
+                    </Select>
+                    <InputError :message="form.errors.category_id" />
+                </div>
+
+                <div class="grid gap-2">
+                    <Label for="amount" class="sr-only">Amount</Label>
+                    <Input id="amount" type="number" name="amount" v-model="form.amount" min="0" step="0.01" placeholder="Amount" />
+                    <InputError :message="form.errors.amount" />
                 </div>
 
                 <DialogFooter class="gap-2">
                     <DialogClose as-child>
-                        <Button variant="secondary" @click="updating = false"> Cancel </Button>
+                        <Button variant="secondary" @click="onClose(() => (updating = false))"> Cancel </Button>
                     </DialogClose>
 
-                    <Button variant="destructive" :disabled="form.processing">
-                        <button type="submit">Delete account</button>
-                    </Button>
+                    <Button type="submit" :disabled="form.processing"> Save </Button>
                 </DialogFooter>
             </form>
         </DialogContent></Dialog
@@ -191,27 +267,19 @@ const deleteExpense = (e: Event) => {
         ><DialogContent>
             <form class="space-y-6" @submit="deleteExpense">
                 <DialogHeader class="space-y-3">
-                    <DialogTitle>Are you sure you want to delete your account?</DialogTitle>
-                    <DialogDescription>
-                        Once your account is deleted, all of its resources and data will also be permanently deleted. Please enter your password to
-                        confirm you would like to permanently delete your account.
-                    </DialogDescription>
+                    <DialogTitle>Delete expense</DialogTitle>
                 </DialogHeader>
 
-                <div class="grid gap-2">
-                    <Label for="password" class="sr-only">Password</Label>
-                    <Input id="password" type="password" name="password" ref="passwordInput" v-model="form.password" placeholder="Password" />
-                    <InputError :message="form.errors.password" />
-                </div>
+                <DialogDescription>
+                    Are you sure you want to delete this expense ? Note that expense data will be permanently deleted.
+                </DialogDescription>
 
                 <DialogFooter class="gap-2">
                     <DialogClose as-child>
-                        <Button variant="secondary" @click="deleting = false"> Cancel </Button>
+                        <Button variant="secondary" @click="onClose(() => (deleting = false))"> Cancel </Button>
                     </DialogClose>
 
-                    <Button variant="destructive" :disabled="form.processing">
-                        <button type="submit">Delete account</button>
-                    </Button>
+                    <Button variant="destructive" type="submit" :disabled="form.processing"> Delete </Button>
                 </DialogFooter>
             </form>
         </DialogContent></Dialog

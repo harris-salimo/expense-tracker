@@ -46,7 +46,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                     <p class="text-sm text-muted-foreground">Total Past Year Expenses</p>
                 </div>
             </div>
-            <div class="border-sidebar-border/70 dark:border-sidebar-border relative min-h-[100vh] flex-1 rounded-xl border p-5 md:min-h-min">
+            <div class="border-sidebar-border/70 dark:border-sidebar-border relative rounded-xl border p-5">
                 <Table class="caption-top">
                     <TableCaption
                         >A list of your recent expenses.

@@ -7,6 +7,7 @@ use App\Http\Requests\Expense\ExpenseRequest;
 use App\Models\Category;
 use App\Models\Expense;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class ExpenseController extends Controller
@@ -37,7 +38,8 @@ class ExpenseController extends Controller
                 'id' => $expense->id,
                 'amount' => number_format($expense->amount, 2),
                 'createdAt' => $expense->created_at,
-                'category' => $expense->category->name
+                'category' => $expense->category->name,
+                'category_id' => $expense->category->id,
             ];
         })]);
     }
@@ -49,7 +51,9 @@ class ExpenseController extends Controller
     {
         $validated = $request->validated();
 
-        Expense::create($validated);
+        $authenticatedUser = Auth::user();
+
+        Expense::create([...$validated, 'user_id' => $authenticatedUser->id]);
 
         return back()->with('message', 'success');
     }

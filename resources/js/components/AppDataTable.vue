@@ -73,7 +73,7 @@ const table = useVueTable({
 
 <template>
     <div>
-        <div class="flex flex-col items-center gap-2 py-2">
+        <div class="flex flex-col md:flex-row items-center gap-2 py-2">
             <Input
                 v-show="!!filteredBy"
                 class="max-w-sm"
@@ -138,10 +138,10 @@ const table = useVueTable({
             </Table>
         </div>
         <div class="flex items-center justify-between p-2">
-            <div class="text-muted-foreground hidden flex-1 text-sm md:flex">
+            <!-- <div class="text-muted-foreground hidden flex-1 text-sm md:flex">
                 {{ table.getFilteredSelectedRowModel().rows.length }} of {{ table.getFilteredRowModel().rows.length }} row(s) selected.
-            </div>
-            <div class="flex items-center space-x-2 md:space-x-6 lg:space-x-8">
+            </div> -->
+            <div class="ml-auto flex items-center space-x-2 md:space-x-6 lg:space-x-8">
                 <div class="flex items-center space-x-2">
                     <p class="hidden text-sm font-medium md:flex">Rows per page</p>
                     <Select :model-value="`${table.getState().pagination.pageSize}`" @update:model-value="table.setPageSize">
