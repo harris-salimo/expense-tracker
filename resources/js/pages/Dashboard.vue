@@ -1,17 +1,20 @@
 <script setup lang="ts">
-import TextLink from '@/components/TextLink.vue';
+import { buttonVariants } from '@/components/ui/button';
+import { AreaChart } from '@/components/ui/chart-area';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { dayjs } from '@/lib/dayjs';
-import { currencyFormat } from '@/lib/utils';
+import { formatCurrency, formatNumber } from '@/lib/utils';
 import { type BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
+import { PlusIcon } from 'lucide-vue-next';
 
 interface Props {
     latestExpenses: Record<string, any>[];
     pastWeekTotalExpenses: string;
     pastMonthTotalExpenses: string;
     pastYearTotalExpenses: string;
+    monthlyExpenses: Record<string, any>[];
 }
 
 defineProps<Props>();
@@ -22,6 +25,10 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/dashboard',
     },
 ];
+
+const yTickFormatter = (value: any) => {
+    return formatNumber(value as number);
+};
 </script>
 
 <template>
@@ -29,29 +36,35 @@ const breadcrumbs: BreadcrumbItem[] = [
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
+            <div class="flex justify-end">
+                <Link :href="route('expense.index')" :class="buttonVariants({ size: 'icon' })" class="rounded-full"><PlusIcon /></Link>
+            </div>
+
             <div class="grid auto-rows-min gap-4 md:grid-cols-3">
                 <div class="border-sidebar-border/70 dark:border-sidebar-border relative overflow-hidden rounded-xl border p-5">
-                    <p class="text-2xl font-medium text-foreground">{{ currencyFormat(pastWeekTotalExpenses) }}</p>
+                    <p class="text-foreground text-2xl font-medium">{{ formatCurrency(pastWeekTotalExpenses) }}</p>
 
-                    <p class="text-sm text-muted-foreground">Total Past Week Expenses</p>
+                    <p class="text-muted-foreground text-sm">Total Past Week Expenses</p>
                 </div>
                 <div class="border-sidebar-border/70 dark:border-sidebar-border relative overflow-hidden rounded-xl border p-5">
-                    <p class="text-2xl font-medium text-foreground">{{ currencyFormat(pastMonthTotalExpenses) }}</p>
+                    <p class="text-foreground text-2xl font-medium">{{ formatCurrency(pastMonthTotalExpenses) }}</p>
 
-                    <p class="text-sm text-muted-foreground">Total Past Month Expenses</p>
+                    <p class="text-muted-foreground text-sm">Total Past Month Expenses</p>
                 </div>
                 <div class="border-sidebar-border/70 dark:border-sidebar-border relative overflow-hidden rounded-xl border p-5">
-                    <p class="text-2xl font-medium text-foreground">{{ currencyFormat(pastYearTotalExpenses) }}</p>
+                    <p class="text-foreground text-2xl font-medium">{{ formatCurrency(pastYearTotalExpenses) }}</p>
 
-                    <p class="text-sm text-muted-foreground">Total Past Year Expenses</p>
+                    <p class="text-muted-foreground text-sm">Total Past Year Expenses</p>
                 </div>
             </div>
+
+            <div class="border-sidebar-border/70 dark:border-sidebar-border relative rounded-xl border p-5">
+                <AreaChart :data="monthlyExpenses" index="month" :categories="['expenses']" :show-legend="false" :y-formatter="yTickFormatter" />
+            </div>
+
             <div class="border-sidebar-border/70 dark:border-sidebar-border relative rounded-xl border p-5">
                 <Table class="caption-top">
-                    <TableCaption
-                        >A list of your recent expenses.
-                        <TextLink class="inline-flex" :href="route('expense.index')">View more</TextLink></TableCaption
-                    >
+                    <TableCaption>Last expenses.</TableCaption>
                     <TableHeader>
                         <TableRow>
                             <TableHead class="w-[100px]"> Creation date </TableHead>
@@ -60,13 +73,19 @@ const breadcrumbs: BreadcrumbItem[] = [
                         </TableRow>
                     </TableHeader>
                     <TableBody
-                        ><TableRow v-for="expense in latestExpenses" :key="expense.id">
-                            <TableCell class="font-medium">
-                                {{ dayjs(expense.createdAt).format('l') }}
-                            </TableCell>
-                            <TableCell>{{ expense.category }}</TableCell>
-                            <TableCell class="text-right"> {{ currencyFormat(expense.amount) }} </TableCell>
-                        </TableRow>
+                        ><template v-if="latestExpenses.length > 0"
+                            ><TableRow v-for="expense in latestExpenses" :key="expense.id">
+                                <TableCell class="font-medium">
+                                    {{ dayjs(expense.createdAt).format('l') }}
+                                </TableCell>
+                                <TableCell>{{ expense.category }}</TableCell>
+                                <TableCell class="text-right"> {{ formatCurrency(expense.amount) }} </TableCell>
+                            </TableRow></template
+                        ><template v-else
+                            ><TableRow>
+                                <TableCell :colspan="3" class="h-24 text-center"> No data available. </TableCell>
+                            </TableRow></template
+                        >
                     </TableBody>
                 </Table>
             </div>

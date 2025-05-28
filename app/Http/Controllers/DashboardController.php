@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Expense;
+use App\Utils\ExpenseUtil;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -30,39 +31,13 @@ class DashboardController extends Controller
                     'id' => $expense->id,
                     'amount' => number_format($expense->amount, 2),
                     'createdAt' => $expense->created_at,
-                    'category' => $expense->category->name
+                    'category' => $expense->category->name,
                 ];
             }),
-            'pastWeekTotalExpenses' => $this->getPastWeekTotalExpenses($latestExpenses),
-            'pastMonthTotalExpenses' => $this->getPastMonthTotalExpenses($latestExpenses),
-            'pastYearTotalExpenses' => $this->getPastYearTotalExpenses($latestExpenses)
+            'pastWeekTotalExpenses' => ExpenseUtil::getPastWeekTotalExpenses($latestExpenses),
+            'pastMonthTotalExpenses' => ExpenseUtil::getPastMonthTotalExpenses($latestExpenses),
+            'pastYearTotalExpenses' => ExpenseUtil::getPastYearTotalExpenses($latestExpenses),
+            'monthlyExpenses' => ExpenseUtil::getMonthlyExpenses($latestExpenses),
         ]);
-    }
-
-    private function getPastWeekTotalExpenses(mixed $expenses)
-    {
-        return number_format($expenses->whereBetween('created_at', [
-            now()->subDays(7)->startOfDay(),
-            now()->endOfDay()
-        ])
-            ->sum('amount'), 2);
-    }
-
-    private function getPastMonthTotalExpenses(mixed $expenses)
-    {
-        return number_format($expenses->whereBetween('created_at', [
-            now()->subDays(30)->startOfDay(),
-            now()->endOfDay()
-        ])
-            ->sum('amount'), 2);
-    }
-
-    private function getPastYearTotalExpenses(mixed $expenses)
-    {
-        return number_format($expenses->whereBetween('created_at', [
-            now()->subDays(365)->startOfDay(),
-            now()->endOfDay()
-        ])
-            ->sum('amount'), 2);
     }
 }

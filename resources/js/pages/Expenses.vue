@@ -10,15 +10,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import AppLayout from '@/layouts/AppLayout.vue';
 import { dayjs } from '@/lib/dayjs';
 import { currencyFormat } from '@/lib/utils';
-import { type BreadcrumbItem } from '@/types';
+import { Category, Expense, type BreadcrumbItem } from '@/types';
 import { Head, useForm } from '@inertiajs/vue3';
 import { ColumnDef } from '@tanstack/vue-table';
 import { ArrowUpDown } from 'lucide-vue-next';
 import { h, ref, watch } from 'vue';
 
 interface Props {
-    categories: Record<string, any>[];
-    expenses: Record<string, any>[];
+    categories: Category[];
+    expenses: Expense[];
 }
 
 const props = defineProps<Props>();
@@ -37,13 +37,6 @@ const breadcrumbs: BreadcrumbItem[] = [
 const adding = ref(false);
 const updating = ref(false);
 const deleting = ref(false);
-
-export interface Expense {
-    id: string;
-    amount: number;
-    category: string;
-    createdAt: string;
-}
 
 const form = useForm<{ id: string; category_id: string; amount: string }>({
     id: '',
@@ -116,17 +109,17 @@ const columns: ColumnDef<Expense>[] = [
                 data,
                 onExpand: row.toggleExpanded,
                 onUpdate: (id: string) => {
-                    const defaults = props.expenses.find((expense) => expense.id === id) ?? {};
-                    form.id = defaults.id;
-                    form.category_id = defaults.category_id;
-                    form.amount = defaults.amount;
+                    const defaults = props.expenses.find((expense) => expense.id === id);
+                    form.id = defaults?.id;
+                    form.category_id = defaults?.category_id;
+                    form.amount = defaults?.amount;
                     updating.value = true;
                 },
                 onDelete: (id: string) => {
-                    const defaults = props.expenses.find((expense) => expense.id === id) ?? {};
-                    form.id = defaults.id;
-                    form.category_id = defaults.category_id;
-                    form.amount = defaults.amount;
+                    const defaults = props.expenses.find((expense) => expense.id === id);
+                    form.id = defaults?.id;
+                    form.category_id = defaults?.category_id;
+                    form.amount = defaults?.amount;
                     deleting.value = true;
                 },
             });
@@ -167,7 +160,7 @@ const updateExpense = (e: Event) => {
 
 const deleteExpense = (e: Event) => {
     e.preventDefault();
-    console.log(form.data())
+    console.log(form.data());
 
     form.delete(route('expense.destroy', { expense: form.data() }), {
         preserveScroll: true,

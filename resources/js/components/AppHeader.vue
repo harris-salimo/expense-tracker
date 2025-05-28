@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// import AppLogo from '@/components/AppLogo.vue';
+import AppLogo from '@/components/AppLogo.vue';
 // import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -109,8 +109,7 @@ const auth = computed(() => page.props.auth);
                 </div> -->
 
                 <Link :href="route('dashboard')" class="flex items-center gap-x-2">
-                    <!-- <AppLogo /> -->
-                    <div class="text-xl font-extrabold">Expense Tracker</div>
+                    <AppLogo />
                 </Link>
 
                 <!-- Desktop Menu -->

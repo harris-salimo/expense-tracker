@@ -31,7 +31,7 @@ class ExpenseController extends Controller
         return Inertia::render('Expenses', ['categories' => Category::all()->map(function (Category $category) {
             return [
                 'id' => $category->id,
-                'name' => $category->name
+                'name' => $category->name,
             ];
         }), 'expenses' => $expenses->orderByDesc('created_at')->get()->map(function (Expense $expense) {
             return [

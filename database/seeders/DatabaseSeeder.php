@@ -24,12 +24,12 @@ class DatabaseSeeder extends Seeder
 
         $userRole = Role::factory()->create(['name' => 'User']);
         $users = User::factory(10)->for($userRole)->create();
-        $categories = Category::factory(5)->create();
+        // $categories = Category::factory(5)->create();
 
-        foreach ($categories as $category) {
-            foreach ($users as $user) {
-                Expense::factory(2)->for($user)->for($category)->create();
-            }
-        }
+        // foreach ($categories as $category) {
+        //     foreach ($users as $user) {
+        //         Expense::factory(2)->for($user)->for($category)->create();
+        //     }
+        // }
     }
 }

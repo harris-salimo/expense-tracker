@@ -36,4 +36,16 @@ export interface User {
     updated_at: string;
 }
 
+export interface Expense {
+    id: string;
+    category_id: string;
+    amount: number;
+    category: string;
+    createdAt: string;
+}
+
+export interface Category {
+    Category;
+}
+
 export type BreadcrumbItemType = BreadcrumbItem;

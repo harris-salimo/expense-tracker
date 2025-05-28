@@ -23,7 +23,7 @@ class ExpenseRequest extends FormRequest
     {
         return [
             'category_id' => ['required', 'uuid'],
-            'amount' => ['required', 'decimal:0,2']
+            'amount' => ['required', 'decimal:0,2'],
         ];
     }
 }
