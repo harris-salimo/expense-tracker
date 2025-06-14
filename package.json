@@ -1,0 +1,19 @@
+{
+  "name": "expense_tracker",
+  "version": "0.0.0",
+  "description": "",
+  "author": "Harris Salimo",
+  "private": true,
+  "keywords": ["expense", "personal", "finance"],
+  "license": "MIT",
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "format": "turbo run format"
+  },
+  "devDependencies": {
+    "turbo": "latest"
+  },
+  "packageManager": "pnpm@10.10.0"
+}
