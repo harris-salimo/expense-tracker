@@ -1,8 +1,9 @@
 import { createApp } from 'vue'
 import './style.css'
 import App from './App.vue'
-import { ZiggyVue } from 'ziggy-js';
-import { initializeTheme } from '@/composables/useAppearance';
+import { initializeTheme } from '@workspace/ui/composables';
+import { router } from './router';
+import { VueQueryPlugin } from '@tanstack/vue-query';
 
 // Extend ImportMeta interface for Vite...
 declare module 'vite/client' {
@@ -22,4 +23,4 @@ declare module 'vite/client' {
 // This will set light / dark mode on page load...
 initializeTheme();
 
-createApp(App).use(ZiggyVue).mount('#app')
+createApp(App).use(router).use(VueQueryPlugin).mount('#app');

@@ -3,7 +3,7 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "../../components/tooltip";
 import { type Component, computed } from "vue";
 import SidebarMenuButtonChild, {
   type SidebarMenuButtonProps,

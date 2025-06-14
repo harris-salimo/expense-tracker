@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { PrimitiveProps } from "reka-ui";
 import type { HTMLAttributes } from "vue";
-import { cn } from "@/lib/utils";
+import { cn } from "../../lib/utils";
 import { Primitive } from "reka-ui";
 
 const props = withDefaults(
@@ -15,7 +15,7 @@ const props = withDefaults(
   {
     as: "a",
     size: "md",
-  },
+  }
 );
 </script>
 
@@ -34,7 +34,7 @@ const props = withDefaults(
         size === 'sm' && 'text-xs',
         size === 'md' && 'text-sm',
         'group-data-[collapsible=icon]:hidden',
-        props.class,
+        props.class
       )
     "
   >

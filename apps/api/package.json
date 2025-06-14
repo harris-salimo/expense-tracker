@@ -4,9 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "composer dev",
+    "dev": "php artisan serve",
     "lint": "./vendor/bin/pint --repair",
-    "test": "composer test"
+    "test": "php artisan test"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.0.0",

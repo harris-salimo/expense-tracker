@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { cn } from "@/lib/utils";
+import { cn } from "../../lib/utils";
 import { useEventListener, useMediaQuery, useVModel } from "@vueuse/core";
 import { TooltipProvider } from "reka-ui";
 import { computed, type HTMLAttributes, type Ref, ref } from "vue";
@@ -21,7 +21,7 @@ const props = withDefaults(
   {
     defaultOpen: true,
     open: undefined,
-  },
+  }
 );
 
 const emits = defineEmits<{
@@ -90,7 +90,7 @@ provideSidebarContext({
       :class="
         cn(
           'group/sidebar-wrapper has-data-[variant=inset]:bg-sidebar flex min-h-svh w-full',
-          props.class,
+          props.class
         )
       "
       v-bind="$attrs"

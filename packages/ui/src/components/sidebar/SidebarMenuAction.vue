@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from "vue";
-import { cn } from "@/lib/utils";
+import { cn } from "../../lib/utils";
 import { Primitive, type PrimitiveProps } from "reka-ui";
 
 const props = withDefaults(
@@ -12,7 +12,7 @@ const props = withDefaults(
   >(),
   {
     as: "button",
-  },
+  }
 );
 </script>
 
@@ -30,7 +30,7 @@ const props = withDefaults(
         'group-data-[collapsible=icon]:hidden',
         showOnHover &&
           'peer-data-[active=true]/menu-button:text-sidebar-accent-foreground group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 data-[state=open]:opacity-100 md:opacity-0',
-        props.class,
+        props.class
       )
     "
     :as="as"

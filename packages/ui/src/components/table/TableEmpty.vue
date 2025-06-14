@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { cn } from "@/lib/utils";
+import { cn } from "../../lib/utils";
 import { computed, type HTMLAttributes } from "vue";
 import TableCell from "./TableCell.vue";
 import TableRow from "./TableRow.vue";
@@ -11,7 +11,7 @@ const props = withDefaults(
   }>(),
   {
     colspan: 1,
-  },
+  }
 );
 
 const delegatedProps = computed(() => {
@@ -27,7 +27,7 @@ const delegatedProps = computed(() => {
       :class="
         cn(
           'p-4 whitespace-nowrap align-middle text-sm text-foreground',
-          props.class,
+          props.class
         )
       "
       v-bind="delegatedProps"

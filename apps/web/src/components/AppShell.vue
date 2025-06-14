@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { SidebarProvider } from '@/components/ui/sidebar';
-import { SharedData } from '@/types';
-import { usePage } from '@inertiajs/vue3';
+import { SidebarProvider } from '@workspace/ui/components';
 
 interface Props {
     variant?: 'header' | 'sidebar';
@@ -9,7 +7,7 @@ interface Props {
 
 defineProps<Props>();
 
-const isOpen = usePage<SharedData>().props.sidebarOpen;
+const isOpen = true;
 </script>
 
 <template>

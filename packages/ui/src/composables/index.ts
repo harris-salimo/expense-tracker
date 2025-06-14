@@ -1,1 +1,2 @@
-export * from ".";
+export * from "./useAppearance";
+export * from "./useInitials";

@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="T extends Record<string, any>">
 import type { BaseChartProps } from ".";
-import { cn } from "@/lib/utils";
+import { cn } from "../../lib/utils";
 import { type BulletLegendItemInterface, CurveType } from "@unovis/ts";
 import { Area, Axis, Line } from "@unovis/ts";
 import { VisArea, VisAxis, VisLine, VisXYContainer } from "@unovis/vue";
@@ -11,7 +11,7 @@ import {
   ChartCrosshair,
   ChartLegend,
   defaultColors,
-} from "@/components/ui/chart";
+} from "../../components/chart";
 
 const props = withDefaults(
   defineProps<
@@ -41,7 +41,7 @@ const props = withDefaults(
     showLegend: true,
     showGridLine: true,
     showGradiant: true,
-  },
+  }
 );
 
 const emits = defineEmits<{
@@ -55,7 +55,7 @@ const chartRef = useId();
 
 const index = computed(() => props.index as KeyOfT);
 const colors = computed(() =>
-  props.colors?.length ? props.colors : defaultColors(props.categories.length),
+  props.colors?.length ? props.colors : defaultColors(props.categories.length)
 );
 
 const legendItems = ref<BulletLegendItemInterface[]>(
@@ -63,7 +63,7 @@ const legendItems = ref<BulletLegendItemInterface[]>(
     name: category,
     color: colors.value[i],
     inactive: false,
-  })),
+  }))
 );
 
 const isMounted = useMounted();

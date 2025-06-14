@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from "vue";
-import { cn } from "@/lib/utils";
+import { cn } from "../../lib/utils";
 import { reactiveOmit } from "@vueuse/core";
 import {
   NavigationMenuRoot,
@@ -19,7 +19,7 @@ const props = withDefaults(
   >(),
   {
     viewport: true,
-  },
+  }
 );
 const emits = defineEmits<NavigationMenuRootEmits>();
 
@@ -35,7 +35,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
     :class="
       cn(
         'group/navigation-menu relative flex max-w-max flex-1 items-center justify-center',
-        props.class,
+        props.class
       )
     "
   >

@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import { buttonVariants } from '@/components/ui/button';
-import { AreaChart } from '@/components/ui/chart-area';
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { buttonVariants, AreaChart, Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@workspace/ui/components';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { dayjs } from '@/lib/dayjs';
-import { formatCurrency, formatNumber } from '@/lib/utils';
+import { dayjs } from '@workspace/ui/lib';
+import { formatCurrency, formatNumber } from '@workspace/ui/utils';
 import { type BreadcrumbItem } from '@/types';
-import { Head, Link } from '@inertiajs/vue3';
+import { RouterLink as Link } from 'vue-router';
 import { PlusIcon } from 'lucide-vue-next';
 
 interface Props {
