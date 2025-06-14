@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { dayjs } from '@/lib/dayjs';
-import { currencyFormat } from '@/lib/utils';
+import { formatCurrency } from '@/lib/utils';
 import { Category, Expense, type BreadcrumbItem } from '@/types';
 import { Head, useForm } from '@inertiajs/vue3';
 import { ColumnDef } from '@tanstack/vue-table';
@@ -94,7 +94,7 @@ const columns: ColumnDef<Expense>[] = [
         accessorKey: 'amount',
         header: () => h('div', { class: 'text-right' }, 'Amount'),
         cell: ({ row }) => {
-            const formatted = currencyFormat(row.getValue('amount'));
+            const formatted = formatCurrency(row.getValue('amount'));
 
             return h('div', { class: 'text-right font-medium' }, formatted);
         },
