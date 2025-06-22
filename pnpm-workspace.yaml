@@ -1,8 +1,4 @@
-packages:
-  - apps/*
-  - packages/*
 onlyBuiltDependencies:
-  - '@tailwindcss/oxide'
   - esbuild
   - maplibre-gl
   - vue-demi
