@@ -42,10 +42,10 @@ jobs:
           node-version: '22'
           cache: 'pnpm'
 
-      - name: Run Pint
-        run: vendor/bin/pint
+      - name: Install Node Dependencies
+        run: pnpm install --frozen-lockfile
 
-      - name: Format Frontend
+      - name: Format code
         run: pnpm format
 
       - name: Lint Frontend

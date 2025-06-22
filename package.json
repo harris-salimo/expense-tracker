@@ -5,7 +5,7 @@
         "build": "vite build",
         "build:ssr": "vite build && vite build --ssr",
         "dev": "vite",
-        "format": "prettier --write resources/ && ./vendor/bin/pint --repair",
+        "format": "./vendor/bin/pint --repair && prettier --write resources/",
         "format:check": "prettier --check resources/",
         "lint": "eslint . --fix"
     },
