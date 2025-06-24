@@ -16,17 +16,19 @@ class DashboardController extends Controller
     {
         $authenticatedUser = $request->user()->loadMissing('role');
 
-        $latestExpenses = [];
-        $expenses = Expense::with('category');
+        // Start with the base query
+        $expensesQuery = Expense::with('category');
 
         if ($authenticatedUser->role->name !== 'Admin') {
-            $latestExpenses = $expenses->where('user_id', $authenticatedUser->id);
-        } else {
-            $latestExpenses = $expenses;
+            $expensesQuery->where('user_id', $authenticatedUser->id);
         }
 
+        // Get the collection of expenses BEFORE passing to ExpenseUtil
+        // This is the crucial change to resolve the type error.
+        $allUserExpenses = $expensesQuery->get(); // Execute the query here
+
         return Inertia::render('Dashboard', [
-            'latestExpenses' => $latestExpenses->orderByDesc('created_at')->take(13)->get()->map(function (Expense $expense) {
+            'latestExpenses' => $allUserExpenses->sortByDesc('created_at')->take(13)->map(function (Expense $expense) {
                 return [
                     'id' => $expense->id,
                     'amount' => number_format($expense->amount, 2),
@@ -34,10 +36,10 @@ class DashboardController extends Controller
                     'category' => $expense->category->name,
                 ];
             }),
-            'pastWeekTotalExpenses' => ExpenseUtil::getPastWeekTotalExpenses($latestExpenses),
-            'pastMonthTotalExpenses' => ExpenseUtil::getPastMonthTotalExpenses($latestExpenses),
-            'pastYearTotalExpenses' => ExpenseUtil::getPastYearTotalExpenses($latestExpenses),
-            'monthlyExpenses' => ExpenseUtil::getMonthlyExpenses($latestExpenses),
+            'pastWeekTotalExpenses' => ExpenseUtil::getPastWeekTotalExpenses($allUserExpenses),
+            'pastMonthTotalExpenses' => ExpenseUtil::getPastMonthTotalExpenses($allUserExpenses),
+            'pastYearTotalExpenses' => ExpenseUtil::getPastYearTotalExpenses($allUserExpenses),
+            'monthlyExpenses' => ExpenseUtil::getMonthlyExpenses($allUserExpenses),
         ]);
     }
 }
