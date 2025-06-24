@@ -39,7 +39,7 @@ test('should return past year total expenses', function () {
 
     $expenses->push(createExpense(1000.00, now()->subMonths(13)->startOfMonth()));
 
-    expect(ExpenseUtil::getPastYearTotalExpenses($expenses))->toBe('4800.00');
+    expect(ExpenseUtil::getPastYearTotalExpenses($expenses))->toBe('4,800.00');
 });
 
 test('should return monthly expenses for the current year', function () {
