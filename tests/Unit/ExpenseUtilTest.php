@@ -32,7 +32,7 @@ test('should return past month total expenses', function () {
 });
 
 test('should return past year total expenses', function () {
-    $expenses = new Collection();
+    $expenses = new Collection;
     for ($i = 0; $i < 12; $i++) {
         $expenses->push(createExpense(400.00, now()->subMonths($i)->startOfMonth()->addDays(10)));
     }
@@ -44,7 +44,7 @@ test('should return past year total expenses', function () {
 
 test('should return monthly expenses for the current year', function () {
     $currentYear = now()->year;
-    $expenses = new Collection();
+    $expenses = new Collection;
 
     for ($monthNum = 1; $monthNum <= 12; $monthNum++) {
         $expenses->push(createExpense(100.00, Carbon::create($currentYear, $monthNum, 5)));

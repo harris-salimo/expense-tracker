@@ -10,7 +10,7 @@ class ExpenseUtil
     /**
      * Calculates the total expenses for the past week.
      *
-     * @param Collection $expenses A collection of expense objects, each with 'amount' and 'created_at'.
+     * @param  Collection  $expenses  A collection of expense objects, each with 'amount' and 'created_at'.
      * @return string The total expenses formatted to two decimal places.
      */
     public static function getPastWeekTotalExpenses(Collection $expenses): string
@@ -22,6 +22,7 @@ class ExpenseUtil
             $expenses->filter(function ($expense) use ($startOfWeek, $endOfWeek) {
                 // Ensure 'created_at' is a Carbon instance for accurate date comparison
                 $createdAt = Carbon::parse($expense->created_at);
+
                 return $createdAt->between($startOfWeek, $endOfWeek);
             })->sum('amount'),
             2
@@ -31,7 +32,7 @@ class ExpenseUtil
     /**
      * Calculates the total expenses for the past month.
      *
-     * @param Collection $expenses A collection of expense objects, each with 'amount' and 'created_at'.
+     * @param  Collection  $expenses  A collection of expense objects, each with 'amount' and 'created_at'.
      * @return string The total expenses formatted to two decimal places.
      */
     public static function getPastMonthTotalExpenses(Collection $expenses): string
@@ -42,6 +43,7 @@ class ExpenseUtil
         return number_format(
             $expenses->filter(function ($expense) use ($startOfMonth, $endOfMonth) {
                 $createdAt = Carbon::parse($expense->created_at);
+
                 return $createdAt->between($startOfMonth, $endOfMonth);
             })->sum('amount'),
             2
@@ -51,7 +53,7 @@ class ExpenseUtil
     /**
      * Calculates the total expenses for the past year.
      *
-     * @param Collection $expenses A collection of expense objects, each with 'amount' and 'created_at'.
+     * @param  Collection  $expenses  A collection of expense objects, each with 'amount' and 'created_at'.
      * @return string The total expenses formatted to two decimal places.
      */
     public static function getPastYearTotalExpenses(Collection $expenses): string
@@ -62,6 +64,7 @@ class ExpenseUtil
         return number_format(
             $expenses->filter(function ($expense) use ($startOfYear, $endOfYear) {
                 $createdAt = Carbon::parse($expense->created_at);
+
                 return $createdAt->between($startOfYear, $endOfYear);
             })->sum('amount'),
             2
@@ -71,9 +74,9 @@ class ExpenseUtil
     /**
      * Retrieves monthly expenses for the current year.
      *
-     * @param Collection $expenses A collection of expense objects, each with 'amount' and 'created_at'.
+     * @param  Collection  $expenses  A collection of expense objects, each with 'amount' and 'created_at'.
      * @return array An array where each element represents a month's expenses,
-     * with 'name' (month abbreviation) and 'total' (formatted string).
+     *               with 'name' (month abbreviation) and 'total' (formatted string).
      */
     public static function getMonthlyExpenses(Collection $expenses): array
     {
@@ -102,6 +105,7 @@ class ExpenseUtil
             // Filter expenses for the specific month and sum their amounts
             $total = $expenses->filter(function ($expense) use ($startOfMonth, $endOfMonth) {
                 $createdAt = Carbon::parse($expense->created_at);
+
                 return $createdAt->between($startOfMonth, $endOfMonth);
             })->sum('amount');
 
