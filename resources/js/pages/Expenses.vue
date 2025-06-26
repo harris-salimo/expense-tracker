@@ -11,7 +11,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { dayjs } from '@/lib/dayjs';
 import { formatCurrency } from '@/lib/utils';
 import { Category, Expense, type BreadcrumbItem } from '@/types';
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head, router, useForm } from '@inertiajs/vue3';
 import { ColumnDef } from '@tanstack/vue-table';
 import { ArrowUpDown } from 'lucide-vue-next';
 import { h, ref, watch } from 'vue';
@@ -19,6 +19,7 @@ import { h, ref, watch } from 'vue';
 interface Props {
     categories: Category[];
     expenses: Expense[];
+    activeFilterPeriod?: 'all' | 'past_week' | 'past_month' | 'past_three_months';
 }
 
 const props = defineProps<Props>();
@@ -37,6 +38,15 @@ const breadcrumbs: BreadcrumbItem[] = [
 const adding = ref(false);
 const updating = ref(false);
 const deleting = ref(false);
+
+const selectedFilterPeriod = ref<'all' | 'past_week' | 'past_month' | 'past_three_months'>(props.activeFilterPeriod ?? 'all');
+watch(selectedFilterPeriod, (newPeriod) => {
+  router.get(
+    route('expenses.index', { period: newPeriod === 'all' ? undefined : newPeriod }),
+    {},
+    { preserveState: true, preserveScroll: true }
+  );
+});
 
 const form = useForm<{ id: string; category_id: string; amount: string }>({
     id: '',
@@ -110,26 +120,30 @@ const columns: ColumnDef<Expense>[] = [
                 onExpand: row.toggleExpanded,
                 onUpdate: (id: string) => {
                     const defaults = props.expenses.find((expense) => expense.id === id);
-                    form.id = defaults?.id;
-                    form.category_id = defaults?.category_id;
-                    form.amount = defaults?.amount;
+
+                    if (defaults) {
+                        form.id = defaults.id;
+                        form.category_id = defaults.category_id;
+                        form.amount = `${defaults.amount}`;
+                    }
+
                     updating.value = true;
                 },
                 onDelete: (id: string) => {
                     const defaults = props.expenses.find((expense) => expense.id === id);
-                    form.id = defaults?.id;
-                    form.category_id = defaults?.category_id;
-                    form.amount = defaults?.amount;
+
+                    if (defaults) {
+                        form.id = defaults.id;
+                        form.category_id = defaults.category_id;
+                        form.amount = `${defaults.amount}`;
+                    }
+
                     deleting.value = true;
                 },
             });
         },
     },
 ];
-
-watch(form.data(), () => {
-    console.log(form.data());
-});
 
 const onClose = (cb: () => void) => {
     form.cancel();
@@ -139,7 +153,7 @@ const onClose = (cb: () => void) => {
 const addExpense = (e: Event) => {
     e.preventDefault();
 
-    form.post(route('expense.store'), {
+    form.post(route('expenses.store'), {
         preserveScroll: true,
         onSuccess: () => (adding.value = false),
         onError: () => {},
@@ -150,7 +164,7 @@ const addExpense = (e: Event) => {
 const updateExpense = (e: Event) => {
     e.preventDefault();
 
-    form.put(route('expense.update', form.data()), {
+    form.put(route('expenses.update', form.data()), {
         preserveScroll: true,
         onSuccess: () => (updating.value = false),
         onError: () => {},
@@ -160,9 +174,8 @@ const updateExpense = (e: Event) => {
 
 const deleteExpense = (e: Event) => {
     e.preventDefault();
-    console.log(form.data());
 
-    form.delete(route('expense.destroy', { expense: form.data() }), {
+    form.delete(route('expenses.destroy', { expense: form.data() }), {
         preserveScroll: true,
         onSuccess: () => (deleting.value = false),
         onError: () => {},
@@ -176,11 +189,25 @@ const deleteExpense = (e: Event) => {
 
     <AppLayout :breadcrumbs="breadcrumbs"
         ><div class="border-sidebar-border/70 dark:border-sidebar-border relative m-5 rounded-xl border p-5">
-            <div class="flex">
-                <Button type="button" class="ml-auto" @click="adding = true">Ajouter</Button>
-            </div>
-            <AppDataTable :columns="columns" :data="expenses" /></div
-    ></AppLayout>
+            <AppDataTable :columns="columns" :data="expenses"
+                ><template #actions>
+                    <Select v-model="selectedFilterPeriod">
+                        <SelectTrigger>
+                            <SelectValue placeholder="Select period" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="all"> All </SelectItem>
+                            <SelectItem value="past_week"> Past week </SelectItem>
+                            <SelectItem value="past_month"> Past month </SelectItem>
+                            <SelectItem value="past_three_months"> Last 3 months </SelectItem>
+                        </SelectContent>
+                    </Select>
+
+                    <Button type="button" class="ml-auto" @click="adding = true">Ajouter</Button>
+                </template></AppDataTable
+            >
+        </div></AppLayout
+    >
 
     <Dialog :open="adding"
         ><DialogContent>

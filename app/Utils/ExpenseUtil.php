@@ -18,15 +18,15 @@ class ExpenseUtil
         $startOfWeek = now()->subWeek()->startOfDay();
         $endOfWeek = now()->endOfDay();
 
-        return number_format(
-            $expenses->filter(function ($expense) use ($startOfWeek, $endOfWeek) {
+        // return number_format(
+        return $expenses->filter(function ($expense) use ($startOfWeek, $endOfWeek) {
                 // Ensure 'created_at' is a Carbon instance for accurate date comparison
                 $createdAt = Carbon::parse($expense->created_at);
 
                 return $createdAt->between($startOfWeek, $endOfWeek);
-            })->sum('amount'),
-            2
-        );
+            })->sum('amount');
+            // 2
+        // );
     }
 
     /**
@@ -40,14 +40,14 @@ class ExpenseUtil
         $startOfMonth = now()->subMonth()->startOfDay();
         $endOfMonth = now()->endOfDay();
 
-        return number_format(
-            $expenses->filter(function ($expense) use ($startOfMonth, $endOfMonth) {
+        // return number_format(
+        return $expenses->filter(function ($expense) use ($startOfMonth, $endOfMonth) {
                 $createdAt = Carbon::parse($expense->created_at);
 
                 return $createdAt->between($startOfMonth, $endOfMonth);
-            })->sum('amount'),
-            2
-        );
+            })->sum('amount');
+            // 2
+        // );
     }
 
     /**
@@ -61,14 +61,14 @@ class ExpenseUtil
         $startOfYear = now()->subYear()->startOfDay();
         $endOfYear = now()->endOfDay();
 
-        return number_format(
-            $expenses->filter(function ($expense) use ($startOfYear, $endOfYear) {
+        // return number_format(
+        return $expenses->filter(function ($expense) use ($startOfYear, $endOfYear) {
                 $createdAt = Carbon::parse($expense->created_at);
 
                 return $createdAt->between($startOfYear, $endOfYear);
-            })->sum('amount'),
-            2
-        );
+            })->sum('amount');
+            // 2
+        // );
     }
 
     /**
@@ -110,8 +110,9 @@ class ExpenseUtil
             })->sum('amount');
 
             $monthlyData[] = [
-                'name' => $monthName, // Changed from 'month' to 'name' to match test expectation
-                'total' => number_format($total, 2), // Formatted as string to match test expectation
+                'month' => $monthName, // Changed from 'month' to 'name' to match test expectation
+                'expenses' => $total,
+                // 'total' => number_format($total, 2), // Formatted as string to match test expectation
             ];
         }
 

@@ -1,13 +1,11 @@
 <script setup lang="ts">
-import { buttonVariants } from '@/components/ui/button';
 import { AreaChart } from '@/components/ui/chart-area';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { dayjs } from '@/lib/dayjs';
 import { formatCurrency, formatNumber } from '@/lib/utils';
 import { type BreadcrumbItem } from '@/types';
-import { Head, Link } from '@inertiajs/vue3';
-import { PlusIcon } from 'lucide-vue-next';
+import { Head } from '@inertiajs/vue3';
 
 interface Props {
     latestExpenses: Record<string, any>[];
@@ -36,10 +34,6 @@ const yTickFormatter = (value: any) => {
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
-            <div class="flex justify-end">
-                <Link :href="route('expense.index')" :class="buttonVariants({ size: 'icon' })" class="rounded-full"><PlusIcon /></Link>
-            </div>
-
             <div class="grid auto-rows-min gap-4 md:grid-cols-3">
                 <div class="border-sidebar-border/70 dark:border-sidebar-border relative overflow-hidden rounded-xl border p-5">
                     <p class="text-foreground text-2xl font-medium">{{ formatCurrency(pastWeekTotalExpenses) }}</p>

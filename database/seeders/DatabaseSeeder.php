@@ -16,15 +16,27 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $adminRole = Role::factory()->create(['name' => 'Admin']);
-        User::factory()->for($adminRole)->create([
-            'name' => 'Admin',
-            'email' => 'admin@expense-tracker.com',
-        ]);
+        // $adminRole = Role::factory()->create(['name' => 'Admin']);
+        // User::factory()->for($adminRole)->create([
+        //     'name' => 'Admin',
+        //     'email' => 'admin@expense-tracker.com',
+        // ]);
 
-        $userRole = Role::factory()->create(['name' => 'User']);
-        $users = User::factory(10)->for($userRole)->create();
-        // $categories = Category::factory(5)->create();
+        // $userRole = Role::factory()->create(['name' => 'User']);
+        // User::factory(10)->for($userRole)->create();
+
+        $categoryNames = [
+            'Groceries',
+            'Leisure',
+            'Electronics',
+            'Utilities',
+            'Clothing',
+            'Health',
+            'Others'
+        ];
+        foreach ($categoryNames as $categoryName) {
+            Category::factory()->create(['name' => $categoryName]);
+        }
 
         // foreach ($categories as $category) {
         //     foreach ($users as $user) {

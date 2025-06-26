@@ -1,7 +1,6 @@
 <script setup lang="ts" generic="TData, TValue">
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { valueUpdater } from '@/components/ui/table/utils';
 import type { ColumnDef, ColumnFiltersState, ExpandedState, SortingState, VisibilityState } from '@tanstack/vue-table';
@@ -74,36 +73,40 @@ const table = useVueTable({
 <template>
     <div>
         <div class="flex flex-col items-center gap-2 py-2 md:flex-row">
-            <Input
+            <!-- <Input
                 v-show="!!filteredBy"
                 class="max-w-sm"
                 placeholder="Filter..."
                 :model-value="table.getColumn(filteredBy!)?.getFilterValue() as string"
                 @update:model-value="table.getColumn(filteredBy!)?.setFilterValue($event)"
-            />
-            <DropdownMenu>
-                <DropdownMenuTrigger as-child>
-                    <Button variant="outline" class="ml-auto">
-                        Columns
-                        <ChevronDown class="ml-2 h-4 w-4" />
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                    <DropdownMenuCheckboxItem
-                        v-for="column in table.getAllColumns().filter((column) => column.getCanHide())"
-                        :key="column.id"
-                        class="capitalize"
-                        :modelValue="column.getIsVisible()"
-                        @update:modelValue="
-                            (value) => {
-                                column.toggleVisibility(!!value);
-                            }
-                        "
-                    >
-                        {{ column.id }}
-                    </DropdownMenuCheckboxItem>
-                </DropdownMenuContent>
-            </DropdownMenu>
+            /> -->
+            <div class="ml-auto flex items-center space-x-2">
+                <DropdownMenu>
+                    <DropdownMenuTrigger as-child>
+                        <Button variant="outline">
+                            Columns
+                            <ChevronDown class="ml-2 h-4 w-4" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                        <DropdownMenuCheckboxItem
+                            v-for="column in table.getAllColumns().filter((column) => column.getCanHide())"
+                            :key="column.id"
+                            class="capitalize"
+                            :modelValue="column.getIsVisible()"
+                            @update:modelValue="
+                                (value) => {
+                                    column.toggleVisibility(!!value);
+                                }
+                            "
+                        >
+                            {{ column.id }}
+                        </DropdownMenuCheckboxItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+
+                <slot name="actions" />
+            </div>
         </div>
         <div class="py-2">
             <Table>

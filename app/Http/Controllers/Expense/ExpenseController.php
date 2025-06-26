@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Expense\ExpenseRequest;
 use App\Models\Category;
 use App\Models\Expense;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -19,13 +20,27 @@ class ExpenseController extends Controller
     {
         $authenticatedUser = $request->user()->loadMissing('role');
 
-        $expenses = [];
-        $statement = Expense::with('category');
+        $expensesQuery = Expense::with('category');
 
         if ($authenticatedUser->role->name !== 'Admin') {
-            $expenses = $statement->where('user_id', $authenticatedUser->id);
-        } else {
-            $expenses = $statement;
+            $expensesQuery->where('user_id', $authenticatedUser->id);
+        }
+
+        $filterPeriod = $request->query('period');
+
+        switch ($filterPeriod) {
+            case 'past_week':
+                $expensesQuery->where('created_at', '>=', Carbon::now()->subDays(7)->startOfDay());
+                $expensesQuery->where('created_at', '<=', Carbon::now()->endOfDay());
+                break;
+            case 'past_month':
+                $expensesQuery->where('created_at', '>=', Carbon::now()->subMonth()->startOfDay());
+                $expensesQuery->where('created_at', '<=', Carbon::now()->endOfDay());
+                break;
+            case 'past_three_months':
+                $expensesQuery->where('created_at', '>=', Carbon::now()->subMonths(3)->startOfDay());
+                $expensesQuery->where('created_at', '<=', Carbon::now()->endOfDay());
+                break;
         }
 
         return Inertia::render('Expenses', ['categories' => Category::all()->map(function (Category $category) {
@@ -33,15 +48,16 @@ class ExpenseController extends Controller
                 'id' => $category->id,
                 'name' => $category->name,
             ];
-        }), 'expenses' => $expenses->orderByDesc('created_at')->get()->map(function (Expense $expense) {
+        }), 'expenses' => $expensesQuery->orderByDesc('created_at')->get()->map(function (Expense $expense) {
             return [
                 'id' => $expense->id,
-                'amount' => number_format($expense->amount, 2),
+                // 'amount' => number_format($expense->amount, 2),
+                'amount' => $expense->amount,
                 'createdAt' => $expense->created_at,
                 'category' => $expense->category->name,
                 'category_id' => $expense->category->id,
             ];
-        })]);
+        }), 'activeFilterPeriod' => $filterPeriod,]);
     }
 
     /**
