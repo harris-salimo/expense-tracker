@@ -20,12 +20,12 @@ class ExpenseUtil
 
         // return number_format(
         return $expenses->filter(function ($expense) use ($startOfWeek, $endOfWeek) {
-                // Ensure 'created_at' is a Carbon instance for accurate date comparison
-                $createdAt = Carbon::parse($expense->created_at);
+            // Ensure 'created_at' is a Carbon instance for accurate date comparison
+            $createdAt = Carbon::parse($expense->created_at);
 
-                return $createdAt->between($startOfWeek, $endOfWeek);
-            })->sum('amount');
-            // 2
+            return $createdAt->between($startOfWeek, $endOfWeek);
+        })->sum('amount');
+        // 2
         // );
     }
 
@@ -42,11 +42,11 @@ class ExpenseUtil
 
         // return number_format(
         return $expenses->filter(function ($expense) use ($startOfMonth, $endOfMonth) {
-                $createdAt = Carbon::parse($expense->created_at);
+            $createdAt = Carbon::parse($expense->created_at);
 
-                return $createdAt->between($startOfMonth, $endOfMonth);
-            })->sum('amount');
-            // 2
+            return $createdAt->between($startOfMonth, $endOfMonth);
+        })->sum('amount');
+        // 2
         // );
     }
 
@@ -63,11 +63,11 @@ class ExpenseUtil
 
         // return number_format(
         return $expenses->filter(function ($expense) use ($startOfYear, $endOfYear) {
-                $createdAt = Carbon::parse($expense->created_at);
+            $createdAt = Carbon::parse($expense->created_at);
 
-                return $createdAt->between($startOfYear, $endOfYear);
-            })->sum('amount');
-            // 2
+            return $createdAt->between($startOfYear, $endOfYear);
+        })->sum('amount');
+        // 2
         // );
     }
 

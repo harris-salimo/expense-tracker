@@ -25,18 +25,18 @@ class DatabaseSeeder extends Seeder
         // $userRole = Role::factory()->create(['name' => 'User']);
         // User::factory(10)->for($userRole)->create();
 
-        $categoryNames = [
-            'Groceries',
-            'Leisure',
-            'Electronics',
-            'Utilities',
-            'Clothing',
-            'Health',
-            'Others'
-        ];
-        foreach ($categoryNames as $categoryName) {
-            Category::factory()->create(['name' => $categoryName]);
-        }
+        // $categoryNames = [
+        //     'Groceries',
+        //     'Leisure',
+        //     'Electronics',
+        //     'Utilities',
+        //     'Clothing',
+        //     'Health',
+        //     'Others',
+        // ];
+        // foreach ($categoryNames as $categoryName) {
+        //     Category::factory()->create(['name' => $categoryName]);
+        // }
 
         // foreach ($categories as $category) {
         //     foreach ($users as $user) {

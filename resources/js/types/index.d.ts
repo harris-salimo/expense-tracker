@@ -46,7 +46,7 @@ export interface Expense {
 
 export interface Category {
     id: string;
-    name: string
+    name: string;
 }
 
 export type BreadcrumbItemType = BreadcrumbItem;

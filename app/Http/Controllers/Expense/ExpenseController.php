@@ -57,7 +57,7 @@ class ExpenseController extends Controller
                 'category' => $expense->category->name,
                 'category_id' => $expense->category->id,
             ];
-        }), 'activeFilterPeriod' => $filterPeriod,]);
+        }), 'activeFilterPeriod' => $filterPeriod, ]);
     }
 
     /**

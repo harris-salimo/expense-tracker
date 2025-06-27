@@ -41,11 +41,7 @@ const deleting = ref(false);
 
 const selectedFilterPeriod = ref<'all' | 'past_week' | 'past_month' | 'past_three_months'>(props.activeFilterPeriod ?? 'all');
 watch(selectedFilterPeriod, (newPeriod) => {
-  router.get(
-    route('expenses.index', { period: newPeriod === 'all' ? undefined : newPeriod }),
-    {},
-    { preserveState: true, preserveScroll: true }
-  );
+    router.get(route('expenses.index', { period: newPeriod === 'all' ? undefined : newPeriod }), {}, { preserveState: true, preserveScroll: true });
 });
 
 const form = useForm<{ id: string; category_id: string; amount: string }>({
