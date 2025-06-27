@@ -1,29 +1,38 @@
-# Stage 1: Build PHP dependencies
 FROM composer:lts AS vendor
+
 WORKDIR /app
+
 COPY composer.json composer.lock ./
+
 RUN composer install --prefer-dist --no-dev --optimize-autoloader --no-interaction
+
 COPY . .
 
-# Stage 2: Build frontend assets (optional)
+
 FROM node:lts-alpine AS frontend
+
 WORKDIR /app
+
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+
 RUN npm install -g pnpm@10.6.2 && \
     pnpm install --frozen-lockfile
+
 COPY . .
+
 RUN pnpm build
 
-# Stage 3: Final production image
+
 FROM php:8.2-fpm-alpine AS production
+
 RUN apk add --no-cache \
     bash \
     curl \
-    libxml2-dev \
     file \
     libcurl \
-    libpng-dev \
     libjpeg-turbo-dev \
+    libpng-dev \
+    libxml2-dev \
     libzip-dev \
     oniguruma-dev \
     postgresql-dev \
@@ -35,7 +44,7 @@ RUN apk add --no-cache \
     curl \
     dom \
     fileinfo \
-    && rm -rf /var/cache/apk/* # Clean up apk cache to keep image size small
+    && rm -rf /var/cache/apk/*
 
 WORKDIR /var/www/html
 

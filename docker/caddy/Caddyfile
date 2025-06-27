@@ -1,0 +1,16 @@
+:80 {
+    root * /app/public
+
+    php_fastcgi unix//run/php/php8.2-fpm.sock {
+        root /app/public
+    }
+
+    try_files {path} {path}/ /index.php?{query}
+
+    log {
+        output stdout
+        format json
+    }
+
+    encode gzip
+}
