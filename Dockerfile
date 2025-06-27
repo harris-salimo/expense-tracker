@@ -26,8 +26,8 @@ FROM dunglas/frankenphp:1-alpine AS production
 RUN apk add --no-cache \
     bash \
     curl \
+    curl-dev \
     file \
-    libcurl-dev \
     libjpeg-turbo-dev \
     libpng-dev \
     libxml2-dev \
