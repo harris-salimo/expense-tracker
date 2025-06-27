@@ -11,7 +11,7 @@ FROM node:lts-alpine AS node_deps
 
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY --from=composer_deps /app/vendor /app/vendor
 
 RUN npm install -g pnpm@10.6.2 && \
     pnpm install --frozen-lockfile
