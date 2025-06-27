@@ -1,12 +1,16 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "harris-salimo/expense_tracker_next",
+    "name": "harris-salimo/expense_tracker",
     "version": "1.0.0",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "Budget app for managing my personal finances built with Laravel and Inertia.js.",
     "keywords": [
         "laravel",
-        "framework"
+        "framework",
+        "personal",
+        "finance",
+        "budget",
+        "expense"
     ],
     "license": "MIT",
     "require": {
