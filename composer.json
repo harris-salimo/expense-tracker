@@ -3,7 +3,7 @@
     "name": "harris-salimo/expense_tracker",
     "version": "1.0.0",
     "type": "project",
-    "description": "Budget app for managing my personal finances built with Laravel and Inertia.js.",
+    "description": "Budget app for managing personal finances built with Laravel and Inertia.js.",
     "keywords": [
         "laravel",
         "framework",
