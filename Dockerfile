@@ -53,7 +53,7 @@ WORKDIR /app
 
 COPY --from=node_deps /app /app
 
-RUN chown -R frankenphp:frankenphp /app/storage /app/bootstrap/cache \
+RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache \
     && chmod -R 775 /app/storage /app/bootstrap/cache \
     && chmod -R ug+rwx /app/storage /app/bootstrap/cache
 
