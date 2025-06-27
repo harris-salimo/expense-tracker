@@ -27,7 +27,7 @@ RUN apk add --no-cache \
     bash \
     curl \
     file \
-    libcurl \
+    libcurl-dev \
     libjpeg-turbo-dev \
     libpng-dev \
     libxml2-dev \
