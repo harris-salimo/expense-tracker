@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: expense-tracker
+    runtime: docker
+    plan: free
+    healthCheckPath: /up
+    dockerfilePath: Dockerfile
+    region: frankfurt
+    envVars:
+      - key: APP_NAME
+        value: ExpenseTracker
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_URL
+        value: ""
+      - key: APP_KEY
+        generateValue: true
+
+      - key: DB_CONNECTION
+        value: ""
+      - key: DB_HOST
+        value: ""
+      - key: DB_PORT
+        value: ""
+      - key: DB_DATABASE
+        value: ""
+      - key: DB_USERNAME
+        value: ""
+      - key: DB_PASSWORD
+        value: ""
