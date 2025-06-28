@@ -63,6 +63,8 @@ RUN php artisan optimize:clear \
     && php artisan route:cache \
     && php artisan view:cache
 
+RUN php artisan migrate --force
+
 EXPOSE 80
 
 COPY ./docker/caddy/Caddyfile /etc/caddy/Caddyfile
