@@ -57,7 +57,8 @@ RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache \
     && chmod -R 775 /app/storage /app/bootstrap/cache \
     && chmod -R ug+rwx /app/storage /app/bootstrap/cache
 
-RUN php artisan optimize:clear \
+RUN cp .env.example .env \
+    && php artisan optimize:clear \
     && php artisan config:cache \
     && php artisan event:cache \
     && php artisan route:cache \
